@@ -10,25 +10,15 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.post('/submit', (req, res) => {
-    const { your_email, target_email, description } = req.body || {};
-    
-    console.log('Form data:', { your_email, target_email, description });
-    
-    if (!your_email || !target_email || !description) {
-        return res.status(400).json({
-            error: 'All fields required!',
-            received: { your_email, target_email, description }
-        });
-    }
-    const generated_email = "hello sir";
-
-    res.json({
-        success: true,
-        email: generated_email,
-        received: { your_email, target_email, description }
-    });
+app.get('/success', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'success.html'));
 });
+app.post('/submit', (req, res) => {
+    const { your_email, target_email, description } = req.body;
+    console.log(`Received submission: Your Email: ${your_email}, Target Email: ${target_email}, Description: ${description}`);
+    res.json({ message: 'Submission received successfully!' });
+});
+
 
 
 app.listen(3000, () => {

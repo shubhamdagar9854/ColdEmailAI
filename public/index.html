@@ -1,18 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cold Email Generator</title>
     <style>
-        body { font-family: Arial; max-width: 600px; margin: 50px auto; padding: 20px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
-        button { background: #007bff; color: white; padding: 12px 30px; border: none; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        #result { margin-top: 20px; background: #f8f9fa; padding: 20px; border-radius: 5px; }
-        pre { white-space: pre-wrap; font-family: Arial; }
+        body {
+            font-family: Arial;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            font-family: Arial;
+        }
     </style>
 </head>
+
 <body>
     <h1> Cold Email Generator</h1>
     <form id="emailForm">
@@ -21,41 +54,38 @@
         <input type="text" name="description" placeholder="Description: MERN Intern / React Developer"><br>
         <button type="submit">Generate Email</button>
     </form>
-    
+
     <div id="result"></div>
 
     <script>
         document.getElementById('emailForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const formData = new FormData(e.target);
-            const resultDiv = document.getElementById('result');
-            
-            resultDiv.innerHTML = '⏳ Generating email...';
-            
+
             try {
-                const response = await fetch('/submit', {
+                // Form data backend ko bhej do
+                await fetch('/submit', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         your_email: formData.get('your_email'),
                         target_email: formData.get('target_email'),
                         description: formData.get('description')
                     })
                 });
-                
-                const data = await response.json();
-                resultDiv.innerHTML = `
-                    <h3>✅ Ready to Send:</h3>
-                    <pre>${data.email}</pre>
-                    <button onclick="navigator.clipboard.writeText('${data.email.replace(/'/g, "\\'")}')">📋 Copy Email</button>
-                `;
+
+                // ✅ TURANT REDIRECT (0.5 sec wait)
+                setTimeout(() => {
+                    window.location.href = '/success.html';
+                }, 500);
+
             } catch (error) {
-                resultDiv.innerHTML = '<p style="color: red;">❌ Error generating email. Try again!</p>';
+                alert('Error! Try again.');
             }
         });
     </script>
+
 </body>
+
 </html>
