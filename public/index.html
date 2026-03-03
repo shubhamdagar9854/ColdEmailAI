@@ -52,7 +52,7 @@
         <input type="email" name="your_email" placeholder="Your Email: shubham@example.com" required><br>
         <input type="email" name="target_email" placeholder="Target Email: hr@company.com" required><br>
         <input type="text" name="description" placeholder="Description: MERN Intern / React Developer"><br>
-        <button type="submit">Generate Email</button>
+        <button type="submit" id="submitBtn">Generate Email</button>
     </form>
 
     <div id="result"></div>
@@ -64,8 +64,9 @@
             const formData = new FormData(e.target);
 
             try {
-                // Form data backend ko bhej do
-                await fetch('/submit', {
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').textContent = '🤖 AI Generating...';
+                const response = await fetch('/submit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -75,10 +76,18 @@
                     })
                 });
 
-                // ✅ TURANT REDIRECT (0.5 sec wait)
-                setTimeout(() => {
-                    window.location.href = '/success.html';
-                }, 500);
+                const result = await response.json();  // ✅ Get AI response
+
+                if (result.email) {
+                    localStorage.setItem('emailData', JSON.stringify({
+                        email: result.email,
+                        subject: result.subject || "Generated Email",
+                        target: formData.get('target_email')
+                    }));
+                    window.location.href = '/email-preview';
+                } else {
+                    alert('Error generating email!');
+                }
 
             } catch (error) {
                 alert('Error! Try again.');

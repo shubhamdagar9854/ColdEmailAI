@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Generated Email</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .email-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .subject {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .email-body {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-send {
+            background: #28a745;
+            color: white;
+        }
+        .btn-back {
+            background: #6c757d;
+            color: white;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Your AI Generated Email</h1>
+        
+        <div class="email-box">
+            <div class="subject">Subject: <span id="subject"></span></div>
+            <div class="email-body" id="emailBody"></div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-back" onclick="goBack()">← Back</button>
+            <button class="btn-send" onclick="sendEmail()">📤 Send Email</button>
+        </div>
+    </div>
+
+    <script>
+        let emailData = {};
+
+        window.onload = function() {
+            const stored = localStorage.getItem('emailData');
+            if (stored) {
+                emailData = JSON.parse(stored);
+                showEmail();
+            } else {
+                alert('No email data found!');
+                window.location.href = '/';
+            }
+        };
+
+        function showEmail() {
+            document.getElementById('subject').textContent = emailData.subject;
+            document.getElementById('emailBody').textContent = emailData.email;
+        }
+
+        function goBack() {
+            window.location.href = '/';
+        }
+
+        function sendEmail() {
+            const subject = encodeURIComponent(emailData.subject);
+            const body = encodeURIComponent(emailData.email);
+            window.location.href = `mailto:${emailData.target}?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>
